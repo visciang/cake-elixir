@@ -83,13 +83,3 @@ elixir.escript:
     RUN apk add --no-cache ${ELIXIR_ESCRIPT_EXTRA_APK}
     COPY --from=+elixir.escript-build ${WORKDIR}/escript /escript
     ENTRYPOINT [ "/escript" ]
-
-elixir.xxx-example-push:
-    @push
-    FROM +elixir.base
-    RUN echo "side-effect"
-
-elixir.xxx-example-push2:
-    @push
-    FROM +elixir.base
-    RUN echo "side-effect"
