@@ -12,6 +12,7 @@ elixir.base:
     WORKDIR ${WORKDIR}
 
 elixir.toolchain:
+    @devshell
     FROM +elixir.base
     RUN apk add --no-cache git build-base
     RUN mix local.rebar --force && \
