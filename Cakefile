@@ -21,8 +21,8 @@ elixir.toolchain:
 elixir.deps:
     FROM +elixir.toolchain
     COPY mix.exs mix.lock* ./
-    RUN --mount=type=ssh mix deps.get
-    RUN mix deps.get --check-unused
+    RUN --mount=type=ssh mix deps.get --check-locked
+    RUN mix deps.unlock --check-unused
     RUN MIX_ENV=dev mix deps.compile && \
         MIX_ENV=test mix deps.compile
 
