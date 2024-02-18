@@ -60,6 +60,7 @@ elixir.test:
     @output ${WORKDIR}/cover
     FROM +elixir.compile
     ARG ELIXIR_TEST_CMD="coveralls.html"
+    COPY coveralls.json* .
     RUN mix ${ELIXIR_TEST_CMD}
 
 elixir.docs:
