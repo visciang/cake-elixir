@@ -1,15 +1,15 @@
-ARG ELIXIR_VERSION=1.16.2
-ARG ELIXIR_ERLANG_VERSION=26.2.2
-ARG ELIXIR_ALPINE_VERSION=3.19.1
-ARG WORKDIR=/code
+ARG _ELIXIR_VERSION=1.16.2
+ARG _ELIXIR_ERLANG_VERSION=26.2.2
+ARG _ELIXIR_ALPINE_VERSION=3.19.1
+ARG _WORKDIR=/code
 
 elixir.lint: elixir.dialyzer elixir.format elixir.credo
 
 elixir.base:
-    FROM docker.io/hexpm/elixir:${ELIXIR_VERSION}-erlang-${ELIXIR_ERLANG_VERSION}-alpine-${ELIXIR_ALPINE_VERSION}
+    FROM docker.io/hexpm/elixir:${_ELIXIR_VERSION}-erlang-${_ELIXIR_ERLANG_VERSION}-alpine-${_ELIXIR_ALPINE_VERSION}
     RUN apk add --no-cache git openssh-client
-    ARG WORKDIR
-    WORKDIR ${WORKDIR}
+    ARG _WORKDIR
+    WORKDIR ${_WORKDIR}
 
 elixir.toolchain:
     @devshell
@@ -42,8 +42,8 @@ elixir.dialyzer-plt:
 
 elixir.dialyzer:
     FROM +elixir.compile
-    ARG WORKDIR
-    COPY --from=+elixir.dialyzer-plt ${WORKDIR}/_build/dev/dialyxir_*.plt* ./_build/dev/
+    ARG _WORKDIR
+    COPY --from=+elixir.dialyzer-plt ${_WORKDIR}/_build/dev/dialyxir_*.plt* ./_build/dev/
     RUN mix dialyzer --no-check
 
 elixir.format:
@@ -57,14 +57,14 @@ elixir.credo:
     RUN mix credo ${ELIXIR_CREDO_OPTS}
 
 elixir.test:
-    @output ${WORKDIR}/cover
+    @output ${_WORKDIR}/cover
     FROM +elixir.compile
     ARG ELIXIR_TEST_CMD="coveralls.html"
     COPY coveralls.json* .
     RUN mix ${ELIXIR_TEST_CMD}
 
 elixir.docs:
-    @output ${WORKDIR}/doc
+    @output ${_WORKDIR}/doc
     FROM +elixir.compile
     COPY README.md ./
     RUN mix docs --formatter=html
@@ -81,8 +81,8 @@ elixir.escript-build:
 
 elixir.escript:
     FROM +elixir.base
-    ARG WORKDIR
+    ARG _WORKDIR
     ARG ELIXIR_ESCRIPT_EXTRA_APK
     RUN apk add --no-cache ${ELIXIR_ESCRIPT_EXTRA_APK}
-    COPY --from=+elixir.escript-build ${WORKDIR}/escript /escript
+    COPY --from=+elixir.escript-build ${_WORKDIR}/escript /escript
     ENTRYPOINT [ "/escript" ]
