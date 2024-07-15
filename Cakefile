@@ -1,12 +1,12 @@
-ARG _ELIXIR_VERSION=1.16.2
-ARG _ELIXIR_ERLANG_VERSION=26.2.2
-ARG _ELIXIR_ALPINE_VERSION=3.19.1
+ARG ELIXIR_VERSION
+ARG ELIXIR_ERLANG_VERSION
+ARG ELIXIR_ALPINE_VERSION
 ARG _WORKDIR=/code
 
 elixir.lint: elixir.dialyzer elixir.format elixir.credo
 
 elixir.base:
-    FROM docker.io/hexpm/elixir:${_ELIXIR_VERSION}-erlang-${_ELIXIR_ERLANG_VERSION}-alpine-${_ELIXIR_ALPINE_VERSION}
+    FROM docker.io/hexpm/elixir:${ELIXIR_VERSION}-erlang-${ELIXIR_ERLANG_VERSION}-alpine-${ELIXIR_ALPINE_VERSION}
     RUN apk add --no-cache git openssh-client
     ARG _WORKDIR
     WORKDIR ${_WORKDIR}
